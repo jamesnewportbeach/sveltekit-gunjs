@@ -4,9 +4,13 @@ declare global {
 	namespace App {
 		// interface Error {}
 		// interface Locals {}
-		// interface PageData {}
 		// interface Platform {}
+
+		interface PageData {
+			path: string;
+			chats: [any];
+		}
 	}
 }
 
-export {};
+export { PageData };

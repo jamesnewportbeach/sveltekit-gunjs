@@ -1,5 +1,8 @@
 <script>
 	import '../app.css';
+	import { SvelteFlowProvider } from '@xyflow/svelte';
 </script>
 
-<slot />
+<SvelteFlowProvider>
+	<slot />
+</SvelteFlowProvider>
