@@ -18,16 +18,24 @@
 		gun.path(id.replaceAll('/', '.')).put({ width: p.width, height: p.height });
 	};
 
+	function changeLabel() {
+		gun.path(id.replaceAll('/', '.')).get('label').put(label);
+	}
+
 	onMount(() => {
 		gun.path(id.replaceAll('/', '.')).map((data) => {
+			if (data !== undefined && typeof data !== 'object') {
+			}
+
 			if (data !== undefined && typeof data === 'object') {
 				const childId = data._['#'];
-				const newNode: Node = {
+				const newNode = {
 					id: childId,
 					data: { id: childId },
 					type: 'customNode',
 					width: data.width || undefined,
 					height: data.height || undefined,
+					label: data.label,
 					position: {
 						x: data.x,
 						y: data.y
@@ -62,6 +70,14 @@
 			}
 		});
 	});
+
+	$: childNodeLength = $nodes.filter((d) => d.id.indexOf(id) === 0).length - 1;
+
+	let label = data.label
+		? data.label
+		: data.id === '/'
+			? window.location.host
+			: data.id.toString().split('/').pop();
 </script>
 
 <div
@@ -78,11 +94,11 @@
 		onResize={(event, params) => resizeNode(event, params)}
 		minWidth={50}
 		minHeight={10}
-		style="background: transparent; border: none; height: 10px; width: 10px; bottom: -3px; right: -3px; left: auto; top: auto"
+		style="background: transparent; border: none; height: 24px; width: 24px; bottom: -8px; right: -8px; opacity: .3; left: auto; top: auto"
 	>
 		<svg
 			height="100%"
-			style="width: 10px; height: 10px"
+			style="width: 100%; height: 100%"
 			viewBox="0 0 24 24"
 			width="100%"
 			xmlns="http://www.w3.org/2000/svg"
@@ -92,12 +108,32 @@
 		>
 	</NodeResizeControl>
 
-	<div
-		style={'padding: 5px 10px; font-size: 12px; text-transform: capitalize; ' +
-			(data.label ? '' : 'font-style: italic; color: rgba(0,0,0,.3)')}
-	>
-		{data.label || 'new'}
-	</div>
+	{#if selected === true}
+		<span
+			role="button"
+			tabindex="0"
+			on:mousedown|stopPropagation
+			on:keyup={(e) => changeLabel}
+			contenteditable="true"
+			bind:textContent={label}
+			style={'padding: 5px 10px; text-transform: capitalize; outline: none; ' +
+				(data.label ? '' : 'font-style: italic; color: rgba(0,0,0,.3); cursor: text')}
+		>
+		</span>
+	{/if}
+
+	{#if selected !== true}
+		<span
+			style={'padding: 5px 10px; text-transform: capitalize; outline: none; ' +
+				(data.label ? '' : 'font-style: italic; color: rgba(0,0,0,.3); cursor: text')}
+		>
+			{label}
+		</span>
+	{/if}
+
+	{#if childNodeLength > 0}
+		({childNodeLength})
+	{/if}
 </div>
 
 <style>

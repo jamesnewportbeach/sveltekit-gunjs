@@ -6,6 +6,11 @@ const config = {
 	kit: {
 		adapter: adapter()
 	},
+	vite: {
+		ssr: {
+			noExternal: ['@googlemaps/js-api-loader']
+		}
+	},
 	preprocess: vitePreprocess()
 };
 
