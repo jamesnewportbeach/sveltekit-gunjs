@@ -18,9 +18,9 @@
 		gun.path(id.replaceAll('/', '.')).put({ width: p.width, height: p.height });
 	};
 
-	function changeLabel() {
-		gun.path(id.replaceAll('/', '.')).get('label').put(label);
-	}
+	const changeLabel = () => {
+		gun.path(id.replaceAll('/', '.')).put({ label: label });
+	};
 
 	onMount(() => {
 		gun.path(id.replaceAll('/', '.')).map((data) => {
@@ -31,11 +31,10 @@
 				const childId = data._['#'];
 				const newNode = {
 					id: childId,
-					data: { id: childId },
+					data: { id: childId, ...data },
 					type: 'customNode',
 					width: data.width || undefined,
 					height: data.height || undefined,
-					label: data.label,
 					position: {
 						x: data.x,
 						y: data.y
@@ -50,9 +49,12 @@
 						d[existingIndex].width = data.width || undefined;
 						d[existingIndex].height = data.height || undefined;
 						d[existingIndex].position = newNode.position;
+						d[existingIndex].data = newNode.data;
 						return d;
 					}
 				});
+
+				console.log($nodes);
 
 				edges.update((d) => {
 					const existingIndex = d.findIndex((d) => d.source === id && d.target === newNode.id);
@@ -122,13 +124,16 @@
 		</span>
 	{/if}
 
+	{label}
+
 	{#if selected !== true}
-		<span
+		<button
+			on:click={() => (selected = true)}
 			style={'padding: 5px 10px; text-transform: capitalize; outline: none; ' +
 				(data.label ? '' : 'font-style: italic; color: rgba(0,0,0,.3); cursor: text')}
 		>
 			{label}
-		</span>
+		</button>
 	{/if}
 
 	{#if childNodeLength > 0}

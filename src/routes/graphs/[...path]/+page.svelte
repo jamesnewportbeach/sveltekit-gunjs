@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import { gun, nodes, edges, location } from '$lib/stores';
 
+	// import '$lib/components/ReactPolygonAnnotation/polygon-canvas.umd';
+
 	import {
 		SvelteFlow,
 		Controls,
@@ -17,9 +19,9 @@
 
 	import { nanoid } from 'nanoid';
 	import CustomNode from './Node.svelte';
-	import GoogleMap from './Map.svelte';
+	// import GoogleMap from './Map.svelte';
 	import FloatingEdge from './FloatingEdge.svelte';
-	import AddressAutocomplete from './AddressAutocomplete.svelte';
+	// import AddressAutocomplete from './AddressAutocomplete.svelte';
 
 	const PUBLIC_GOOGLEMAPS_API_KEY = 'AIzaSyDjcC3UTMdAi8cZXcK7POtXJ7TYf4KvdVE';
 
@@ -41,7 +43,7 @@
 	let DrawingCanvas;
 
 	onMount(async () => {
-		DrawingCanvas = (await import('./Konva.svelte')).default;
+		// DrawingCanvas = (await import('./Konva.svelte')).default;
 
 		/*
 		gun
@@ -137,6 +139,24 @@
 		(156543.03392 * Math.cos(($location.lat * Math.PI) / 180)) / Math.pow(2, $location.zoom);
 </script>
 
+<div style:height="100%">
+	<SvelteFlow
+		{nodes}
+		{edges}
+		{nodeTypes}
+		{edgeTypes}
+		fitView
+		onconnectend={handleConnectEnd}
+		on:nodedrag={(event) => handleMoveNode(event.detail)}
+	>
+		<Controls />
+		<Background variant={BackgroundVariant.Dots} />
+		<MiniMap />
+	</SvelteFlow>
+</div>
+
+<!-- 
+
 <div style=" height: 100%; width: 100%; position: relative">
 	<div style="z-index: 2; position: absolute; left: 0; top: 0;">
 		{#if $location.name}
@@ -164,27 +184,13 @@
 		</div>
 
 		<div style="z-index: 2; height: 100%; width: 100%; position: absolute; left: 0; top: 0">
+			P<polygon-canvas></polygon-canvas>C
+
 			<svelte:component this={DrawingCanvas} />
 		</div>
 	{/if}
 </div>
 
-<!-- 
-<div style:height="100%">
-	<SvelteFlow
-		{nodes}
-		{edges}
-		{nodeTypes}
-		{edgeTypes}
-		fitView
-		onconnectend={handleConnectEnd}
-		on:nodedrag={(event) => handleMoveNode(event.detail)}
-	>
-		<Controls />
-		<Background variant={BackgroundVariant.Dots} />
-		<MiniMap />
-	</SvelteFlow>
-</div>
 -->
 <style>
 	button:disabled {
