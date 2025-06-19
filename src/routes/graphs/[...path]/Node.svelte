@@ -118,7 +118,7 @@
 			on:keyup={(e) => changeLabel}
 			contenteditable="true"
 			bind:textContent={label}
-			style={'padding: 5px 10px; text-transform: capitalize; outline: none; ' +
+			style={'padding: 5px 10px; text-transform: capitalize; outline-solid: none; ' +
 				(data.label ? '' : 'font-style: italic; color: rgba(0,0,0,.3); cursor: text')}
 		>
 		</span>
@@ -129,7 +129,7 @@
 	{#if selected !== true}
 		<button
 			on:click={() => (selected = true)}
-			style={'padding: 5px 10px; text-transform: capitalize; outline: none; ' +
+			style={'padding: 5px 10px; text-transform: capitalize; outline-solid: none; ' +
 				(data.label ? '' : 'font-style: italic; color: rgba(0,0,0,.3); cursor: text')}
 		>
 			{label}

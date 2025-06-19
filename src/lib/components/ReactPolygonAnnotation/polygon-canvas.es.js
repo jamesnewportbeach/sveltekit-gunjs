@@ -1654,7 +1654,7 @@ function bp() {
       case "beforeblur":
       case "afterblur":
       case "beforeinput":
-      case "blur":
+      case "blur-sm":
       case "fullscreenchange":
       case "focus":
       case "hashchange":
@@ -2175,7 +2175,7 @@ function bp() {
               xe = "focus", Se = hi;
               break;
             case "focusout":
-              xe = "blur", Se = hi;
+              xe = "blur-sm", Se = hi;
               break;
             case "beforeblur":
             case "afterblur":
