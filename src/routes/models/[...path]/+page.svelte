@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import { models, localeData } from '$lib/stores';
 
 	import '@xyflow/svelte/dist/style.css';
@@ -8,19 +10,23 @@
 		path: string;
 	}
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 </script>
 
 <div style:height="100%">
 	<input
 		placeholder="Add New..."
-		on:change={(e) => models.add({ label: localeData(e.target.value) }) && (e.target.value = '')}
+		onchange={(e) => models.add({ label: localeData(e.target.value) }) && (e.target.value = '')}
 	/>
 
 	{#each Object.entries($models) as [key, { label }] (key)}
 		<div style="padding: .4rem">
 			<Label key={label} />
-			<a href="#" on:click|preventDefault={() => models.delete(key)}>delete</a>
+			<a href="#" onclick={preventDefault(() => models.delete(key))}>delete</a>
 		</div>
 	{/each}
 </div>

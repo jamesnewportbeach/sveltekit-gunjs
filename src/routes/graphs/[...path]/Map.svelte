@@ -5,12 +5,21 @@
 
 	const { Loader } = gmapsLoader;
 
-	export let apiKey;
-	export let zoom = 10;
-	export let lat = 0;
-	export let lng = 0;
+	interface Props {
+		apiKey: any;
+		zoom?: number;
+		lat?: number;
+		lng?: number;
+	}
 
-	let ele: HTMLElement;
+	let {
+		apiKey,
+		zoom = 10,
+		lat = 0,
+		lng = 0
+	}: Props = $props();
+
+	let ele: HTMLElement = $state();
 	let map;
 
 	location.subscribe((d: any) => {
@@ -44,4 +53,4 @@
 	});
 </script>
 
-<div bind:this={ele} style:height={'100%'} />
+<div bind:this={ele} style:height={'100%'}></div>

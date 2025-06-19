@@ -1,20 +1,26 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { getBezierPath, type EdgeProps, useInternalNode } from '@xyflow/svelte';
 
 	import { getEdgeParams } from './utils';
 
 	type $$Props = EdgeProps;
 
-	export let source: $$Props['source'];
-	export let target: $$Props['target'];
-	export let id: $$Props['id'];
+	interface Props {
+		source: $$Props['source'];
+		target: $$Props['target'];
+		id: $$Props['id'];
+	}
 
-	$: sourceNode = useInternalNode(source);
-	$: targetNode = useInternalNode(target);
+	let { source, target, id }: Props = $props();
 
-	let edgePath: string | undefined;
+	let sourceNode = $derived(useInternalNode(source));
+	let targetNode = $derived(useInternalNode(target));
 
-	$: {
+	let edgePath: string | undefined = $state();
+
+	run(() => {
 		if ($sourceNode && $targetNode) {
 			const edgeParams = getEdgeParams($sourceNode, $targetNode);
 			edgePath = getBezierPath({
@@ -28,7 +34,7 @@
 		} else {
 			edgePath = undefined;
 		}
-	}
+	});
 </script>
 
 <path class="svelte-flow__edge-path" {id} d={edgePath} />

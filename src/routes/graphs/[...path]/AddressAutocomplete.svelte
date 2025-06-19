@@ -6,11 +6,10 @@
 
 	const { Loader } = gmapsLoader;
 
-	export let apiKey;
-	export let value;
+	let { apiKey, value } = $props();
 
 	let autocomplete;
-	let ele: HTMLInputElement;
+	let ele: HTMLInputElement = $state();
 
 	onMount(async function () {
 		if (value) ele.value = value;

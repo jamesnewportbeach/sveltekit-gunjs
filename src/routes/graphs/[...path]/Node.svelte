@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { createBubbler, stopPropagation } from 'svelte/legacy';
+
+	const bubble = createBubbler();
 	import { Handle, Position, NodeResizeControl, type NodeProps } from '@xyflow/svelte';
 	import { type Edge, type Node } from '@xyflow/svelte';
 	import { onMount } from 'svelte';
@@ -7,12 +10,21 @@
 
 	type $$Props = NodeProps;
 
-	export let data: $$Props['data'];
-	export let isConnectable: $$Props['isConnectable'];
-	export let selected: $$Props['selected'] = undefined;
-	export let id: $$Props['id'];
+	interface Props {
+		data: $$Props['data'];
+		isConnectable: $$Props['isConnectable'];
+		selected?: $$Props['selected'];
+		id: $$Props['id'];
+	}
 
-	let isHovered = false;
+	let {
+		data,
+		isConnectable,
+		selected = $bindable(undefined),
+		id
+	}: Props = $props();
+
+	let isHovered = $state(false);
 
 	const resizeNode = (e, p) => {
 		gun.path(id.replaceAll('/', '.')).put({ width: p.width, height: p.height });
@@ -73,19 +85,19 @@
 		});
 	});
 
-	$: childNodeLength = $nodes.filter((d) => d.id.indexOf(id) === 0).length - 1;
+	let childNodeLength = $derived($nodes.filter((d) => d.id.indexOf(id) === 0).length - 1);
 
-	let label = data.label
+	let label = $state(data.label
 		? data.label
 		: data.id === '/'
 			? window.location.host
-			: data.id.toString().split('/').pop();
+			: data.id.toString().split('/').pop());
 </script>
 
 <div
 	style="background-color: rgba(0,0,0,.08); border-radius: 5px; height: 100%; overflow: auto"
-	on:pointerover={() => (isHovered = true)}
-	on:pointerout={() => (isHovered = false)}
+	onpointerover={() => (isHovered = true)}
+	onpointerout={() => (isHovered = false)}
 >
 	<Handle type="target" id="c" position={Position.Top} {isConnectable} />
 	<Handle type="target" id="d" position={Position.Bottom} {isConnectable} />
@@ -114,8 +126,8 @@
 		<span
 			role="button"
 			tabindex="0"
-			on:mousedown|stopPropagation
-			on:keyup={(e) => changeLabel}
+			onmousedown={stopPropagation(bubble('mousedown'))}
+			onkeyup={(e) => changeLabel}
 			contenteditable="true"
 			bind:textContent={label}
 			style={'padding: 5px 10px; text-transform: capitalize; outline-solid: none; ' +
@@ -128,7 +140,7 @@
 
 	{#if selected !== true}
 		<button
-			on:click={() => (selected = true)}
+			onclick={() => (selected = true)}
 			style={'padding: 5px 10px; text-transform: capitalize; outline-solid: none; ' +
 				(data.label ? '' : 'font-style: italic; color: rgba(0,0,0,.3); cursor: text')}
 		>

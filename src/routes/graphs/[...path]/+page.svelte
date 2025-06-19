@@ -38,7 +38,11 @@
 
 	const snapGrid = [10, 10];
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	let DrawingCanvas;
 
@@ -135,8 +139,8 @@
 		});
 	};
 
-	$: metersPerPx =
-		(156543.03392 * Math.cos(($location.lat * Math.PI) / 180)) / Math.pow(2, $location.zoom);
+	let metersPerPx =
+		$derived((156543.03392 * Math.cos(($location.lat * Math.PI) / 180)) / Math.pow(2, $location.zoom));
 </script>
 
 <div style:height="100%">

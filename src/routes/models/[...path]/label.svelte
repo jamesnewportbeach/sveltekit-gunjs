@@ -2,10 +2,14 @@
 	import { gun } from '$lib/stores';
 	import { onMount } from 'svelte';
 
-	export let key;
-	export let locale = 'en-US';
+	interface Props {
+		key: any;
+		locale?: string;
+	}
 
-	let label = '';
+	let { key, locale = 'en-US' }: Props = $props();
+
+	let label = $state('');
 
 	onMount(() => {
 		gun
