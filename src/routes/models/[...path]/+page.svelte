@@ -5,6 +5,7 @@
 
 	import '@xyflow/svelte/dist/style.css';
 	import Label from './label.svelte';
+	import SpeciesAutocomplete from './SpeciesAutocomplete.svelte';
 
 	interface PageData {
 		path: string;
@@ -18,6 +19,7 @@
 </script>
 
 <div style:height="100%">
+	<SpeciesAutocomplete />
 	<input
 		placeholder="Add New..."
 		onchange={(e) => models.add({ label: localeData(e.target.value) }) && (e.target.value = '')}

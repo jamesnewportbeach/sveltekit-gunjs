@@ -9,7 +9,7 @@ const config = {
 	vite: {
 		ssr: {
 			noExternal: ['@googlemaps/js-api-loader']
-		}
+		},
 	},
 	preprocess: vitePreprocess()
 };
